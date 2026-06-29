@@ -51,6 +51,33 @@ a:hover {
   color: #4b5563;
 }
 
+.search-box {
+  max-width: 780px;
+  margin: 18px auto 8px;
+}
+
+.search-box input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  font-size: 16px;
+  outline: none;
+}
+
+.search-box input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37,99,235,.12);
+}
+
+.search-info {
+  margin: 0 auto 0;
+  max-width: 780px;
+  color: #6b7280;
+  font-size: 0.95rem;
+  text-align: center;
+}
+
 .section {
   background: white;
   padding: 20px 22px;
@@ -118,6 +145,10 @@ a:hover {
 <div class="hero">
 <h1>Dog Health Guides</h1>
 <p>Browse our complete collection of dog health articles grouped by topic.</p>
+<div class="search-box">
+<input id="healthSearch" type="search" placeholder="Search health guides..." aria-label="Search health guides">
+</div>
+<p class="search-info" id="healthSearchCount"></p>
 </div>
 
 <section class="section"><h2>Emergency & First Aid</h2>
@@ -270,5 +301,32 @@ a:hover {
 <p>Pet Calculators © . Always consult a licensed veterinarian for personalized medical advice.</p>
 </footer>
 
+<script>
+const healthSearchInput = document.getElementById('healthSearch');
+const healthStatus = document.getElementById('healthSearchCount');
+const healthSections = Array.from(document.querySelectorAll('.section'));
+const healthCards = Array.from(document.querySelectorAll('.card'));
+
+const updateHealthSearch = () => {
+  const query = healthSearchInput.value.trim().toLowerCase();
+  let visibleCount = 0;
+
+  healthSections.forEach((section) => {
+    let sectionVisibleCount = 0;
+    section.querySelectorAll('.card').forEach((card) => {
+      const match = card.textContent.toLowerCase().includes(query);
+      card.style.display = match ? '' : 'none';
+      if (match) sectionVisibleCount += 1;
+    });
+    section.style.display = sectionVisibleCount > 0 ? '' : 'none';
+    visibleCount += sectionVisibleCount;
+  });
+
+  healthStatus.textContent = query ? `${visibleCount} matching guides found.` : `Showing ${visibleCount} guides.`;
+};
+
+healthSearchInput.addEventListener('input', updateHealthSearch);
+updateHealthSearch();
+</script>
 </body>
 </html>
